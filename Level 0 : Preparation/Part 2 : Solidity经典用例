@@ -1,0 +1,471 @@
+1.  Hello World
+
+// SPDX-License-Identifier: MIT
+pragma solidity 0.8.26;
+contract HelloWorld {
+    string public message;
+
+    constructor() {
+        message = "Hello, World!";
+    }
+
+    function getMessage () public view returns (string memory) {
+        return message; 
+    }
+}
+
+2.  First App
+
+// SPDX-License-Identifier: MIT
+pragma solidity 0.8.26;
+contract Counter {
+    uint256 public count;
+
+    function getCount() public view returns (uint256) {
+        return count;
+    }
+
+    function add() public returns (uint256) {
+        return count += 1;
+    }
+
+    function dec() public returns (uint256) {
+        return count -= 1;
+    }
+}
+
+3.  If / Else
+
+// SPDX-License-Identifier: MIT
+pragma solidity 0.8.26;
+contract IfElse {
+        function foo(uint256 x) public pure returns (uint256) {
+            if (x > 10) {
+                return 1;
+            }else {
+                return 2;
+            }
+        }
+        // function fooo(uint256 _x) public pure returns (uint256) {
+        //     return  _x > 10 ? 1 : 2;
+        // }
+}
+
+4.  For and While Loop
+
+// SPDX-License-Identifier: MIT
+pragma solidity 0.8.26;
+contract Loop {
+    function loop() public {
+        for (uint256 i = 0; i < 10; i++) 
+        {
+            if (i == 3) {
+                continue ;
+            }
+            if (i == 5) {
+                break ;
+            }
+        }
+
+        //while loop
+        uint256 j;
+            while (j < 10) {
+                j++;
+            }
+    }
+}
+
+5.  Mapping
+
+// SPDX-License-Identifier: MIT
+pragma solidity 0.8.26;
+contract Mapping {
+    mapping (address => uint256) public myMap;
+
+    function get(address _add) public view returns (uint256) {
+        return myMap[_add];
+    }
+
+    function set(address _add, uint256 _i) public {
+        myMap[_add] = _i;
+    }
+
+    function remove(address _add) public  {
+        delete myMap[_add];
+    }
+}
+contract NestedMapping {
+    mapping (address => mapping (uint256 => bool)) nested;
+
+    function get(address _add1, uint256 _i) public view returns (bool) {
+        return nested[_add1][_i];
+    }
+
+    function set(address _add1, uint256 _i, bool _boo) public  {
+        nested[_add1][_i] = _boo;
+    }
+
+    function remove(address _add1, uint256 _i) public  {
+        delete nested[_add1][_i];
+    }
+}
+
+6.Array
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.26;
+contract Array {
+    uint256[] public arr;
+    uint256[] public arr2 = [1, 2, 3];
+    uint256[10] public myFixedSizeArr;
+
+    function get(uint256 i) public view returns (uint256) {
+        return arr[i];
+    }
+
+    function getArr() public view returns (uint256[] memory) {
+        return arr;
+    }
+
+    function push(uint256 i) public {
+        arr.push(i);
+    }
+
+    function pop() public {
+        arr.pop();
+    }
+
+    function getLength() public view returns (uint256) {
+        return arr.length;
+    }
+
+    function remove(uint256 index) public {
+        delete arr[index];
+    }
+
+    function examples() external {
+        uint256[] memory a = new uint256[](5);
+    }
+}
+
+7.  Enum
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.26;
+contract Enum {
+    enum Status {
+        Pending,
+        Shipped,
+        Accepted,
+        Rejected,
+        Canceled
+    }
+
+    Status public status;
+
+    function get() public view returns (Status) {
+        return status;
+    }
+
+    function set(Status _status) public {
+        status = _status;
+    }
+
+    function cancel() public {
+        status = Status.Canceled;
+    }
+
+    function reset() public {
+        delete status;
+    }
+}
+
+8.Structs
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.24;
+
+contract Todos {
+    struct Todo {
+        string text;
+        bool completed;
+    }
+
+    // An array of 'Todo' structs
+    Todo[] public todos;
+
+    function create(string calldata _text) public {
+        // 3 ways to initialize a struct
+        // - calling it like a function
+        todos.push(Todo(_text, false));
+
+        // key value mapping
+        todos.push(Todo({text: _text, completed: false}));
+
+        // initialize an empty struct and then update it
+        Todo memory todo;
+        todo.text = _text;
+        // todo.completed initialized to false
+
+        todos.push(todo);
+    }
+
+    // Solidity automatically created a getter for 'todos' so
+    // you don't actually need this function.
+    function get(uint256 _index)
+        public
+        view
+        returns (string memory text, bool completed)
+    {
+        Todo storage todo = todos[_index];
+        return (todo.text, todo.completed);
+    }
+
+    // update text
+    function updateText(uint256 _index, string calldata _text) public {
+        Todo storage todo = todos[_index];
+        todo.text = _text;
+    }
+
+    // update completed
+    function toggleCompleted(uint256 _index) public {
+        Todo storage todo = todos[_index];
+        todo.completed = !todo.completed;
+    }
+}
+
+9.Data Locations - Storage, Memory and Calldata
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.26;
+
+contract DataLocations {
+    uint256[] public arr;
+    mapping(uint256 => address) map;
+
+    struct MyStruct {
+        uint256 foo;
+    }
+
+    mapping(uint256 => MyStruct) myStructs;
+
+    function f() public {
+        _f(arr, map, myStructs[1]);
+
+        MyStruct storage myStruct = myStructs[1];
+        MyStruct memory myMemStruct = MyStruct(0);
+    }
+
+    function _f(
+        uint256[] storage _arr,
+        mapping(uint256 => address) storage _map,
+        MyStruct storage _myStruct
+    ) internal {
+        // do something with storage variables
+    }
+
+    // You can return memory variables
+    function g(uint256[] memory _arr) public returns (uint256[] memory) {
+        // do something with memory array
+    }
+
+    function h(uint256[] calldata _arr) external {
+        // do something with calldata array
+    }
+}
+
+10.Function
+
+//解构赋值
+// Use destructuring assignment when calling another
+// function that returns multiple values.
+function destructuringAssignments()
+    public
+    pure
+    returns (uint256, bool, uint256, uint256, uint256)
+{
+    (uint256 i, bool b, uint256 j) = returnMany();
+
+    // Values can be left out.
+    (uint256 x,, uint256 y) = (4, 5, 6);
+
+    return (i, b, j, x, y);
+}
+
+11.Error
+
+//什么时候用哪个？
+	1.	用户输入或外部调用需要检查时，用 require。
+	2.	检查代码中的内部逻辑（不该失败的情况），用 assert。
+	3.	复杂的错误逻辑或特定条件下的回滚，用 revert。
+
+一般来说：
+	•	require 是最常用的。
+	•	assert 主要用来检查 Solidity 自身的安全性，类似于 Debug 断言。
+	•	revert 适用于更灵活的错误处理方式。
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.24;
+
+contract Error {
+    function testRequire(uint256 _i) public pure {
+        // Require should be used to validate conditions such as:
+        // - inputs
+        // - conditions before execution
+        // - return values from calls to other functions
+        require(_i > 10, "Input must be greater than 10");
+    }
+
+    function testRevert(uint256 _i) public pure {
+        // Revert is useful when the condition to check is complex.
+        // This code does the exact same thing as the example above
+        if (_i <= 10) {
+            revert("Input must be greater than 10");
+        }
+    }
+
+    uint256 public num;
+
+    function testAssert() public view {
+        // Assert should only be used to test for internal errors,
+        // and to check invariants.
+
+        // Here we assert that num is always equal to 0
+        // since it is impossible to update the value of num
+        assert(num == 0);
+    }
+
+    // custom error
+    error InsufficientBalance(uint256 balance, uint256 withdrawAmount);
+
+    function testCustomError(uint256 _withdrawAmount) public view {
+        uint256 bal = address(this).balance;
+        if (bal < _withdrawAmount) {
+            revert InsufficientBalance({
+                balance: bal,
+                withdrawAmount: _withdrawAmount
+            });
+        }
+    }
+}
+
+12.Function Modifier
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.24;
+
+contract FunctionModifier {
+    // We will use these variables to demonstrate how to use
+    // modifiers.
+    address public owner;
+    uint256 public x = 10;
+    bool public locked;
+
+    constructor() {
+        // Set the transaction sender as the owner of the contract.
+        owner = msg.sender;
+    }
+
+    // Modifier to check that the caller is the owner of
+    // the contract.
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Not owner");
+        // Underscore is a special character only used inside
+        // a function modifier and it tells Solidity to
+        // execute the rest of the code.
+        _;
+    }
+
+    // Modifiers can take inputs. This modifier checks that the
+    // address passed in is not the zero address.
+    modifier validAddress(address _addr) {
+        require(_addr != address(0), "Not valid address");
+        _;
+    }
+
+    function changeOwner(address _newOwner)
+        public
+        onlyOwner
+        validAddress(_newOwner)
+    {
+        owner = _newOwner;
+    }
+
+    // Modifiers can be called before and / or after a function.
+    // This modifier prevents a function from being called while
+    // it is still executing.
+    modifier noReentrancy() {
+        require(!locked, "No reentrancy");
+
+        locked = true;
+        _;
+        locked = false;
+    }
+
+    function decrement(uint256 i) public noReentrancy {
+        x -= i;
+
+        if (i > 1) {
+            decrement(i - 1);
+        }
+    }
+}
+
+13.Constructor
+
+//在 Solidity 中，如果一个合约继承了多个父合约，构造函数的执行顺序是按照继承声明的顺序，而不是构造函数中调用的顺序。
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.24;
+
+// Base contract X
+contract X {
+    string public name;
+
+    constructor(string memory _name) {
+        name = _name;
+    }
+}
+
+// Base contract Y
+contract Y {
+    string public text;
+
+    constructor(string memory _text) {
+        text = _text;
+    }
+}
+
+// There are 2 ways to initialize parent contract with parameters.
+
+// Pass the parameters here in the inheritance list.
+contract B is X("Input to X"), Y("Input to Y") {}
+
+contract C is X, Y {
+    // Pass the parameters here in the constructor,
+    // similar to function modifiers.
+    constructor(string memory _name, string memory _text) X(_name) Y(_text) {}
+}
+
+// Parent constructors are always called in the order of inheritance
+// regardless of the order of parent contracts listed in the
+// constructor of the child contract.
+
+// Order of constructors called:
+// 1. X
+// 2. Y
+// 3. D
+contract D is X, Y {
+    constructor() X("X was called") Y("Y was called") {}
+}
+
+// Order of constructors called:
+// 1. X
+// 2. Y
+// 3. E
+contract E is X, Y {
+    constructor() Y("Y was called") X("X was called") {}
+}
+
+
+
+
